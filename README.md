@@ -1,6 +1,22 @@
 Simple pipeline for automatically labelling shadows in AirSim.
 The project files can be downloaded from: https://drive.google.com/file/d/1KEpmanbHe8hTl32gHlWhTfDQxzi6PtVo/view?usp=sharing 
 
+## Instructions
+Clone the repo:
+``` 
+git clone https://github.com/mplucinski2/PV_panels.git
+cd PV_panels
+```
+Ideally create virtual environment:
+```
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+Furthermore, AirSim simulator needs to be installed to perform simulations, for guide see:
+https://microsoft.github.io/AirSim
+
+## Script Descriptions
 
 ## dataset_generation_viewpoints.py
 
@@ -22,6 +38,12 @@ with position for cross-dataset compatibility. However, as changing the starting
 are embedded with the location in the \textbf{world frame}, which is consistent even when the starting position does change.
 To do that, AirSim's functionality of extracting position and pose of static meshes in the world frame is used.
 
+## pose_patterns.py  
+Template functions including typical area coverage patterns used by drones, such as lawn mower pattern.
+
+## extract_shadows.py
+This code compares frame pairs with and without shadows and generates the shadow labels.
+
 
 ## Lighting and shadow generation
 To generate light, directional light source is used. To simulate shadows effectively a opaque or semi translucent static mesh can be used, it effectively models every possible type of shadows.
@@ -37,8 +59,6 @@ To make a shadow dynamic, a simple blueprint can be added to move the light-occl
 
 The following images demonstrate the different types of data captured and processed:
 
-### Visualization
-
 | No shadows | With shadows |
 |------------|-------------|
 | ![No shadows](Example_frames/NoShadow.png) | ![With shadow](Example_frames/Shadow.png) |
@@ -47,4 +67,17 @@ The following images demonstrate the different types of data captured and proces
 |------------------|---------------------|
 | ![Shadow](Example_frames/Diff.png) | ![Shadow labelled on the original frame](Example_frames/Label.png) |
 
+## Example dataset from the pipeline
+Frames with shadowed area: https://drive.google.com/drive/folders/1o3DrKKLey3oS3sRHPIhLQrAsalyjnsNs?usp=sharing                      
+Frames without shadowed area: https://drive.google.com/drive/folders/1fb2f8oQge2XOyGaeDHyy2hrch7t5cdHW?usp=sharing                  
+Extracted shadows (labels): https://drive.google.com/drive/folders/1yKQxyaOG7zqdAhD65i4t6alin8G6ZqVo?usp=sharing
 
+## Assets used
+Unreal Environment Countryside: Windmills & Barns - GeorgeShachnev - (used to be available for free, no longer seems to be) - https://www.fab.com/listings/d2921f94-205f-40ac-853f-403c0f4b2b7b 
+Solar Panel 3D Object - Youssef Hamdan - https://www.fab.com/listings/e8f02268-756d-4b79-86a7-0a3fe55fb08d
+
+# Further optimizations
+Pipeline can be optimized further, as AirSim enables executing commands in Unreal Environment directly via the Python API. Hence labelled datasets can be generated in a single program run. Blueprints in Unreal Engine can also be used to export different visual layers using SceneCapture2D.
+
+Attempted blueprint pipeline can be seen below (further debugging needed):
+![Blueprint](Example_frames/Blueprint.png)
