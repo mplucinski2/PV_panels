@@ -1,2 +1,41 @@
-# PV_panels
-Extracting shadows from UE4 AirSim simulations.
+## dataset_generation_viewpoints.py
+Saving sets of pictures taken from the bottom camera at predefined viewpoints, code is run once with shadows and one wihout, as there is no random factor (waypoints are predefined and fixed), the difference between 
+respective frames in both folders corresponds to the shadowed area, enabling the creation of automatic
+RGB-Shadow labelled pairs:). 
+
+The reason why viewpoints are used and not recording from the flight, is the fact
+that two flights are not usually identical due to floating point errors in the physics model governing the flight,
+and small time-shifts between respective relative trigger times. Creating viewpoint sets is a good way to ensure 
+that the frames with and without shadows show precisely the same scene. 
+
+This is equivalent to capturing the frames from the flight, while significantly reducing the computational load,
+which is high already due to rendering of this realistic environment (environment has quite many meshes, grass/plants are
+notoriously computationally expensive to render properly with their shadows). 
+
+Finally, AirSim by default uses positions defined with respect to the player start position (position from which the drone starts). As long as the starting point of the drone is not changed, it would be a good, consistent way to label the frames
+with position for cross-dataset compatibility. However, as changing the starting position is quite often, pictures
+are embedded with the location in the \textbf{world frame}, which is consistent even when the starting position does change.
+To do that, AirSim's functionality of extracting position and pose of static meshes in the world frame is used.
+
+To generate light, directional light source is used. To simulate shadows effectively a opaque or semi translucent static mesh can be used, it effectively models every possible type of shadows.
+
+## pose_patterns.py
+
+Defines set of functions creating predefined sets of viewpoints in the environment, 
+all at constant altitude, altitude can be varied but not relevant to the task.
+
+## Visual comparison
+
+The following images demonstrate the different types of data captured and processed:
+
+### Visualization
+
+| No shadows | With shadows |
+|------------|-------------|
+| ![No shadows](Example_frames/NoShadow.png) | ![With shadows](Example_frames/Shadow.png) |
+
+| Shadow | Shadow labelled on the original frame |
+|------------------|---------------------|
+| ![Shadow](Example_frames/Diff.png) | ![Shadow labelled on the original frame](Example_frames/Label.png) |
+
+
